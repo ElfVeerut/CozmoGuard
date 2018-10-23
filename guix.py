@@ -1,5 +1,7 @@
 import tkinter as tk                # python 3
 from tkinter import font  as tkfont # python 3
+import cam
+import cv2
 #import Tkinter as tk     # python 2
 #import tkFont as tkfont  # python 2
 import requests
@@ -48,8 +50,9 @@ class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="COZM0 GUARD", font=controller.title_font)
-        label.pack(side="top", fill="x", pady=10)
+        label = tk.Label(self, text="COZM0 GUARD", font=("controller.title_font", 50, "bold italic"))
+#        label.config(font=)
+        label.pack(side="top", fill="x", padx=50, pady=50)
 
         button1 = tk.Button(self, text="Home",
                             command=lambda: controller.show_frame("Home"))
@@ -59,10 +62,14 @@ class StartPage(tk.Frame):
                             command=lambda: controller.show_frame("Register"))
         button4 = tk.Button(self, text="Setting",
                             command=lambda: controller.show_frame("Setting"))
-        button1.pack()
-        button2.pack()
-        button3.pack()
-        button4.pack()
+        button1.config(font="System, 20")
+        button1.pack(pady=10)
+        button2.config(font="System, 20")
+        button2.pack(pady=10)
+        button3.config(font="System, 20")
+        button3.pack(pady=10)
+        button4.config(font="System, 20")
+        button4.pack(pady=10)
 
 
 class Home(tk.Frame):
@@ -70,10 +77,11 @@ class Home(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Home", font=controller.title_font)
-        label.pack(side="top", fill="x", pady=10)
+        label = tk.Label(self, text="Home", font=("controller.title_font", 50, "bold italic"))
+        label.pack(side="top", fill="x", padx=50, pady=50)
         button = tk.Button(self, text="Back to Home",
                            command=lambda: controller.show_frame("StartPage"))
+        button.config(font="System, 30")
         button.pack()
 
 class Controller(tk.Frame):
@@ -82,16 +90,19 @@ class Controller(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Controller", font=controller.title_font)
-        label.pack(side="top", fill="x", pady=10)
+        label = tk.Label(self, text="Controller", font=("controller.title_font", 50, "bold italic"))
+        label.pack(side="top", fill="x", padx=50, pady=50)
         button = tk.Button(self, text="Open",
                            command= cozmoguard)
         button1 = tk.Button(self, text="Close",
                            command= cozmoguardClose)
         button2 = tk.Button(self, text="Back to Home",
                            command=lambda: controller.show_frame("StartPage"))
+        button.config(font="System, 30")
         button.pack()
+        button1.config(font="System, 30")
         button1.pack()
+        button2.config(font="System, 30")
         button2.pack()
 
 class Register(tk.Frame):
@@ -99,21 +110,38 @@ class Register(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Face Registering", font=controller.title_font)
-        label.pack(side="top", fill="x", pady=10)
-        button = tk.Button(self, text="Back to Home",
+        label = tk.Label(self, text="Face Registering", font=("controller.title_font", 50, "bold italic"))
+        label.grid(row=0,ipadx=50, ipady=50)
+
+        registerentry = tk.Entry(self)
+        registerentry.grid(row=2)
+        registerentry.config(width="30")
+        button = tk.Button(self, text="Submit",
+                           command=lambda: cam.cam(registerentry.get()))
+        button.bind("<Button-1>",lambda:controller.show_frame("StartPage") )
+        button2 = tk.Button(self, text="Back to Home",
                            command=lambda: controller.show_frame("StartPage"))
-        button.pack() #tum username laew hai mun popup camera to take pic #milestone 2
+        
+        label1= tk.Label(self,text="Username")
+        label1.config(font="System, 40")
+        label1.grid(row=1)
+        button.config(font="System, 30")
+        button.grid(row=3)
+        button2.config(font="System, 30")
+        button2.grid(row=4)
+
+        #tum username laew hai mun popup camera to take pic #milestone 2
 
 class Setting(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Setting", font=controller.title_font)
-        label.pack(side="top", fill="x", pady=10)
+        label = tk.Label(self, text="Setting", font=("controller.title_font", 50, "bold italic"))
+        label.pack(side="top", fill="x", padx=50, pady=50)
         button = tk.Button(self, text="Back to Home",
                            command=lambda: controller.show_frame("StartPage"))
+        button.config(font="System, 30")
         button.pack()
 
  
