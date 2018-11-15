@@ -2,14 +2,16 @@ import tkinter as tk                # python 3
 from tkinter import font  as tkfont # python 3
 import cam
 import cv2
+import facerec3
 #import Tkinter as tk     # python 2
 #import tkFont as tkfont  # python 2
 import requests
+
 def cozmoguard():
-    print(requests.get('http://172.20.10.4:5000/open').text)
+    print(requests.get('http://127.0.0.1:5000/cozmoguardOpen').text)
 
 def cozmoguardClose():
-    print(requests.get('http://172.20.10.4:5000/close').text)
+    print(requests.get('http://127.0.0.1:5000/cozmoguardClose').text)
  
 class SampleApp(tk.Tk):
 
@@ -27,7 +29,7 @@ class SampleApp(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (StartPage, Home, Controller, Register, Setting):
+        for F in (StartPage, Scan , Controller, Register, Setting):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -54,8 +56,8 @@ class StartPage(tk.Frame):
 #        label.config(font=)
         label.pack(side="top", fill="x", padx=50, pady=50)
 
-        button1 = tk.Button(self, text="Home",
-                            command=lambda: controller.show_frame("Home"))
+        button1 = tk.Button(self, text="Scan",
+                            command=lambda: controller.show_frame("Scan"))
         button2 = tk.Button(self, text="Controller",
                             command=lambda: controller.show_frame("Controller"))
         button3 = tk.Button(self, text="Register",
@@ -72,17 +74,21 @@ class StartPage(tk.Frame):
         button4.pack(pady=10)
 
 
-class Home(tk.Frame):
+class Scan(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Home", font=("controller.title_font", 50, "bold italic"))
+        label = tk.Label(self, text="Scan", font=("controller.title_font", 50, "bold italic"))
         label.pack(side="top", fill="x", padx=50, pady=50)
-        button = tk.Button(self, text="Back to Home",
+        button = tk.Button(self, text="Scan",
+                           command=lambda: facerec3.facerec())
+        button2 = tk.Button(self, text="Back to Home",
                            command=lambda: controller.show_frame("StartPage"))
         button.config(font="System, 30")
         button.pack()
+        button2.config(font="System, 30")
+        button2.pack()
 
 class Controller(tk.Frame):
     
