@@ -2,6 +2,8 @@ import face_recognition
 import cv2
 import pymongo
 import os
+import time
+import requests
 
 
 
@@ -15,7 +17,8 @@ def facerec():
     # instead of put the hard codes put something dynamic to connect it with the tkinter
     images=os.listdir("user_face")
     #print(x)
-    images.remove('.DS_Store')
+    if '.DS_Store' in images:
+        images.remove('.DS_Store')
     #print (images)
     known_face_encodings = []
     known_face_names = []
@@ -41,7 +44,9 @@ def facerec():
     face_encodings = []
     face_names = []
     process_this_frame = True
-    count=0 #time count
+    count_open=0
+    count_close=0
+    #time count
     while True:
         # Grab a single frame of video
         ret, frame = video_capture.read()
@@ -59,6 +64,7 @@ def facerec():
             face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
             
             face_names = []
+            
             for face_encoding in face_encodings:
                 # See if the face is a match for the known face(s)
                 matches = face_recognition.compare_faces(known_face_encodings, face_encoding, tolerance=0.4)
@@ -71,9 +77,27 @@ def facerec():
                 if True in matches:
                     first_match_index = matches.index(True)
                     name = known_face_names[first_match_index]
-                    count+=1
+                    time.sleep(0.05)
+                    count_open += 1
+                if count_open==9:
+                    ร
+                    print (requests.get('http://127.0.0.1:5000/cozmoguardOpen').text)
+                    count_open=0
+                # use time.sleep to count the time and count until 9 then the door will open
+                if name == "Unknown":
+                    time.sleep(0.05)
+                    count_close += 1
+                if count_close ==9:
+                    print (requests.get('http://127.0.0.1:5000/cozmoguardClose').text)
+                    print ("Error! 404!")
+                    count_close=0
                 
+                
+                        
+                # use time.sleep to count the time and count until 9 then the door will open
                 face_names.append(name)
+    
+                        
 
         process_this_frame = not process_this_frame
         # Display the results

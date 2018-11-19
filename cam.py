@@ -20,7 +20,7 @@ def cam(name):
 
         cv2.imshow('frame', rgb)
         if cv2.waitKey(1) & 0xFF == ord('q'):
-            out = cv2.imwrite("user_face/"+ name+'.jpg', frame)
+            out = cv2.imwrite("user_face/"+ name +'.jpg', frame)
             break
 
     cap.release()
