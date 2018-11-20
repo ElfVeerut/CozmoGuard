@@ -13,15 +13,17 @@ import cv2
 # - brew install opencv
 def cam(name):
     cap = cv2.VideoCapture(0)
-
+    font = cv2.FONT_HERSHEY_SIMPLEX
     while(True):
         ret, frame = cap.read()
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)
+        cv2.putText(rgb,'Press "Q" to take a picture',(200,50), font, 2,(255,255,255),2,cv2.LINE_AA)
 
         cv2.imshow('frame', rgb)
         if cv2.waitKey(1) & 0xFF == ord('q'):
-            out = cv2.imwrite("user_face/"+ name +'.jpg', frame)
+            out = cv2.imwrite("user_face/"+ name+'.jpg', frame)
             break
 
     cap.release()
     cv2.destroyAllWindows()
+# cam('')
