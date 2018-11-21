@@ -1,12 +1,13 @@
 import face_recognition
 import cv2
-import pymongo
+# import pymongo
 import os
 import time
 import requests
 
 
-
+#url = '127.0.0.1' #for this computer
+url = '172.20.10.12' #for other computer
 
 
 def facerec():
@@ -80,15 +81,18 @@ def facerec():
                     time.sleep(0.05)
                     count_open += 1
                 if count_open==9:
-                    ร
-                    print (requests.get('http://127.0.0.1:5000/cozmoguardOpen').text)
+                
+                    try:
+                        requests.get('http://'+url+':5000/cozmoguardOpenThenClose', timeout=1)
+                    except requests.exceptions.ReadTimeout:
+                        pass
                     count_open=0
                 # use time.sleep to count the time and count until 9 then the door will open
                 if name == "Unknown":
                     time.sleep(0.05)
                     count_close += 1
                 if count_close ==9:
-                    print (requests.get('http://127.0.0.1:5000/cozmoguardClose').text)
+                    (requests.get('http://'+url+':5000/cozmoguardClose').text)
                     print ("Error! 404!")
                     count_close=0
                 
@@ -115,12 +119,14 @@ def facerec():
             cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
             font = cv2.FONT_HERSHEY_DUPLEX
             cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+        # text show to exit
+        cv2.putText(frame,'Press "E" to exit ',(200,50), font, 2,(255,255,255),2,cv2.LINE_AA)
 
         # Display the resulting image
         cv2.imshow('Video', frame)
 
     # Hit 'q' on the keyboard to quit!
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord('e'):
             break
 
     # Release handle to the webcam

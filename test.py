@@ -2,10 +2,11 @@
 #import RPi.GPIO as GPIO
 
 import time
-from flask import Flask, session, redirect, url_for, escape, request
+from flask import Flask, redirect, url_for, escape, request
 app = Flask(__name__)
 app.secret_key = 'KwLWtuXWSX'
 password = '123456'
+session = {}
 #@app.before_first_request
 #def startup():
 #    servoPIN = 17

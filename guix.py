@@ -7,14 +7,13 @@ import facerec3
 #import tkFont as tkfont  # python 2
 import requests
 password= "123456"
-url = '127.0.0.1'
-#url = '192.168.1.204'
-
+#url = '127.0.0.1' #for this computer
+url = '172.20.10.12' #for other computer
 def cozmoguard():
-    print(requests.get('http://'+url+':5000/cozmoguardOpen').text)
+    requests.get('http://'+url+':5000/cozmoguardOpen').text
 
 def cozmoguardClose():
-    print(requests.get('http://'+url+':5000/cozmoguardClose').text)
+    requests.get('http://'+url+':5000/cozmoguardClose').text
  
 class SampleApp(tk.Tk):
 
@@ -62,10 +61,11 @@ class StartPage(tk.Frame):
         button1 = tk.Button(self, text="Scan",
                             command=lambda: controller.show_frame("Scan"))
         button2 = tk.Button(self, text="Controller",
-                            command=lambda: controller.show_frame("Controller"))
+                            # command=lambda: controller.show_frame("Controller"))
+                            command=lambda: check_session(controller, "Controller"))
         button3 = tk.Button(self, text="Register",
 #                            command=lambda: controller.show_frame("Register"))
-                            command=lambda: check_session(controller))
+                            command=lambda: check_session(controller, "Register"))
 
         button4 = tk.Button(self, text="Setting",
                             command=lambda: controller.show_frame("Setting"))
@@ -79,29 +79,30 @@ class StartPage(tk.Frame):
         button4.pack(pady=10)
 
 
-def topLevel(controller):
+def topLevel(controller, frame):
     top=tk.Toplevel()
     top.title("Password")
     passwordentry = tk.Entry(top,show="*")
     passwordentry.pack()
     passwordentry.config(width="30")
     button2 = tk.Button(top, text="Summit",
-                        command=lambda: check_password(top, controller, passwordentry.get()))
+                        command=lambda: check_password(top, controller,frame, passwordentry.get()))
     button2.config(font="System, 30")
     button2.pack()
 
-def check_password(top, controller, password):
+def check_password(top, controller,frame, password):
     if requests.post('http://'+url+':5000/login', data={'password':password}).text == 'True':
         top.destroy()
-        return controller.show_frame("Register")
+        return controller.show_frame(frame)
     return False
 
 
-def check_session(controller):
+def check_session(controller,frame):
     if requests.get('http://'+url+':5000/login').text == 'True':
-        controller.show_frame("Register")
+        controller.show_frame(frame)
+
     else:
-        topLevel(controller)
+        topLevel(controller,frame)
 
 class Scan(tk.Frame):
 
@@ -153,8 +154,10 @@ class Register(tk.Frame):
         registerentry.config(width="30")
         
         button = tk.Button(self, text="Submit",
-                           command=lambda: check(registerentry.get()))
+                           command=lambda: check(registerentry))
         button.bind("<Button-1>",lambda:controller.show_frame("StartPage") )
+        button1 = tk.Button(self, text="Logout",
+                           command=lambda: (controller.show_frame("StartPage"), requests.get('http://'+url+':5000/logout')))
         button2 = tk.Button(self, text="Back to Home",
                            command=lambda: controller.show_frame("StartPage"))
         
@@ -163,15 +166,30 @@ class Register(tk.Frame):
         label1.grid(row=1)
         button.config(font="System, 30")
         button.grid(row=3)
+        button1.config(font="System, 30")
+        button1.grid(row=4)
         button2.config(font="System, 30")
-        button2.grid(row=4)
+        button2.grid(row=5)
 
         #tum username laew hai mun popup camera to take pic #milestone 2
 def check(text):
-    if text=="":
-        print ("error! 404!")
+    if text.get()=="":
+        return
+        #print ("error! 404!")
     else:
-        cam.cam(text)
+        cam.cam(text.get())
+        text.delete(0,'end')
+        done()
+def done():
+    done=tk.Toplevel()
+    done.title("Success")
+    label = tk.Label(done, text="Successful!", font=("controller.title_font", 50, "bold italic"))
+    label.pack(side="top", fill="x", padx=50, pady=50)
+    button = tk.Button(done, text="Close",
+                           command=lambda: done.destroy() )
+    button.config(font="System, 15")
+    button.pack()
+        
 # if username have no entry can't take pic :(
 
 
